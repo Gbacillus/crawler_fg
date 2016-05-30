@@ -1,4 +1,5 @@
 # coding:utf-8
+# 爬取酷我音乐的acc流
 import sys
 import json
 import chardet

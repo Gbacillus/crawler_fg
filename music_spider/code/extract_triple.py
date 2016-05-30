@@ -1,4 +1,5 @@
 # coding:utf-8
+'''将爬下来的json文件，展开为vertex和edge的形式'''
 # import unicode_tool as ut
 import sys
 import json
@@ -11,7 +12,7 @@ fedge = open(sys.argv[3], 'w')
 nodes = {}
 n = 0
 person_heat = {}
-
+uniq = set()
 def clean_title(title):
     title = title.replace("《","").replace("》","").replace(" ","") \
         .replace(".","").replace(",","").replace("-","").lower()
@@ -63,18 +64,21 @@ def rel2tags(rel):
     if rel in ["singers" ,"artist"]:
         rel = "歌手"
         tag = "PERSON"
-    elif rel == "nums" or rel == "HN":
+    elif rel in  ["nums", "HN", "score100"]:
         rel = "hot_num"
         tag = "HN"
-    elif rel == "album":
+    elif rel in ["album"]:
         rel = "专辑"
-    elif rel == "id":
+    elif rel in ["id", "musicrid"]:
         rel = "play_url"
-    elif rel in ["tags", "classify"]:
+    elif rel in ["tags", "classify", "style"]:
         rel = "风格"
-        tag = "EVA"
+    elif rel in ["list_name"]:
+        rel = "歌单"
+    elif rel in ["artistid"]:
+        rel = "download_url"
     else:
-        pass
+        return None, None
     return rel, tag
 
 def kuwo2graph(sub, j):
@@ -93,16 +97,21 @@ def kuwo2graph(sub, j):
                 n += 1
             fedge.write(str(count) + ",版本," + str(nodes[version]) + ",outE" + "\n")
     fnode.write(str(count) + "," + sub + ",MUSIC" + "\n")
-    rid = j["id"][6:]
+    rid = j["id"][6:] if "id" in j else j["musicrid"]
+    #if rid in uniq:
+    #    return
+    #uniq.add(rid)
     for k,v in j.iteritems():
         obj = clean_title(str(v))
         if len(obj) <1:
             continue
         rel, tag = rel2tags(k)
-        if k == "HN":
+        if rel == None:
+            continue
+        elif rel == "hot_num":
             HN = int(obj)
         elif rel == "play_url":
-            obj = "http://www.kuwo.cn/yinyue/" + v[6:]
+            obj = "http://www.kuwo.cn/yinyue/" + rid
         elif rel in ["acc_url", "download_url"]:
             rel = "music_id"
             obj = rid

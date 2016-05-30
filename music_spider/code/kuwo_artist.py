@@ -1,4 +1,5 @@
 # coding:utf-8
+'''酷我音乐爬虫'''
 import urllib2
 from pyquery import PyQuery as pq
 import json
@@ -13,6 +14,7 @@ uniq = set()
 
 
 def feed(data, fout):
+    '''爬取url'''
     # print data
     url = re.findall(r'''<a(\s*)(.*?)(\s*)href(\s*)=(\s*)([\"\s]*)([^\"\']+?)([\"\s]+)(.*?)>(.*?)</a>''', data, re.S | re.I)
     for u in url:
@@ -26,6 +28,7 @@ def feed(data, fout):
         # if u[6].endswith("html") or "taglist" in u[6]:#geo
 
 def find_id(url):
+    '''爬取歌手id'''
     content = urllib2.urlopen(url, timeout=10).read()
     typeEncode = sys.getfilesystemencoding()  # 系统默认编码
     infoencode = chardet.detect(content).get('encoding', 'utf-8')
@@ -37,6 +40,7 @@ def find_id(url):
     #print url,uid
     return uid
 def return_data(url, fout, uid):
+    '''解析歌单页面爬取的数据'''
     content = urllib2.urlopen(url, timeout = 10).read()
     typeEncode = sys.getfilesystemencoding()  # 系统默认编码
     infoencode = chardet.detect(content).get('encoding', 'utf-8')
@@ -74,12 +78,14 @@ def return_data(url, fout, uid):
         return False
 
 def get_url(s):
+    '''组装url'''
     s = "http://www.kuwo.cn/artist/contentMusicsAjax?artistId="+ s + "&pn=0&rn=5000"
     #s = "http://music.baidu.com/data/user/getsongs?start=" + str(n) + "&ting_uid=" + s + "&order=hot&hotmax=0&pay="
     #s = "http://music.baidu.com/tag/" + s + "?start=" + str(n) + "&size=25&third_type=0"
     return s
 
 def get_artist(fout):
+    '''爬取歌手页面'''
     for i in xrange(5555):
         try:
             url = "http://www.kuwo.cn/artist/indexAjax?pn="

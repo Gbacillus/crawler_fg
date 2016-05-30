@@ -1,4 +1,5 @@
 # coding:utf-8
+'''爬取网易风格分类信息'''
 import urllib2
 from pyquery import PyQuery as pq
 import json
@@ -51,6 +52,8 @@ def cra_song(content):
 
 if __name__ == "__main__":
     #fout = open(sys.argv[2], "w")
+    print url2content('http://music.163.com/#/playlist?id=377315799')
+    exit(0)
     n = 0
     for line in open(sys.argv[1], "r"):
         n += 1

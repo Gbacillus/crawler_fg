@@ -1,4 +1,5 @@
 # coding:utf-8
+'''合并'''
 import sys
 artist = {}
 for line in open(sys.argv[1], 'r'):

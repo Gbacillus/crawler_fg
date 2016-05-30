@@ -1,4 +1,5 @@
 #coding:utf-8
+'''酷我多线程爬虫，未完成'''
 from pyquery import PyQuery as pq
 import json,chardet
 import re

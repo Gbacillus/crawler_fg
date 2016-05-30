@@ -1,4 +1,5 @@
 # coding:utf-8
+'''按歌单爬取酷我歌曲，有风格信息'''
 import urllib2
 from pyquery import PyQuery as pq
 import json
@@ -10,6 +11,7 @@ sys.setdefaultencoding('utf-8')
 uniq = set()
 
 def url2content(url):
+    '''通过url返回网页内容'''
     flag = 5
     while flag:
         try:
@@ -26,6 +28,7 @@ def url2content(url):
     return content
 
 def cra_list(content, style):
+    '''按风格爬取酷我歌单列表'''
     lists = []
     names = pq(content)("a.m_name")
     for i in xrange(len(names)):
@@ -39,6 +42,7 @@ def cra_list(content, style):
     return lists
 
 def cra_song(content):
+    '''爬取歌单中的歌曲信息'''
     json_str = re.search(ur"jsonm = (.*)\}\;", content).group()
     json_str = json_str.replace("jsonm = ","").replace(";","")
     j = json.loads(json_str)
